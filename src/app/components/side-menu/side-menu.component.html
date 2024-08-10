@@ -1,0 +1,32 @@
+<div class="side-menu-options">
+    <div class="side-menu-option">
+        <span>ELF file location</span>
+        <input id="elfLocation" type="text" [value]="elfLocation" disabled>
+        <button mat-button class="browse-button" (click)="onBrowseELFLocation($event)">Browse</button>
+    </div>
+    <hr>
+
+    <div class="side-menu-option">
+        <span>Software Components location</span>
+        <input id="swComponentsLocation" type="text" [value]="swComponentsLocation" disabled>
+        <button mat-button class="browse-button" (click)="onBrowseSwComponentsLocation($event)">Browse</button>
+    </div>
+    <hr>
+
+    <div class="side-menu-option">
+        <span>Output location</span>
+        <input id="outputLocation" type="text" [value]="outputLocation" disabled>
+        <button mat-button class="browse-button" (click)="onBrowseOutputLocation($event)">Browse</button>
+    </div>
+
+    <hr class="analyze-hr">
+    <div class="side-menu-option">
+        <span>Start Analysis</span>
+        <button mat-button class="analyze-button" (click)="onAnalyze($event)" [disabled]="elfLocation === '' || swComponentsLocation === '' || outputLocation === ''">Analyze</button>
+    </div>
+    <hr class="analyze-hr">
+</div>
+<div class="sw-components-list">
+    <span class="margin-bottom">Software Components:</span>
+    <app-sw-components class="sw-components-container"></app-sw-components>
+</div>

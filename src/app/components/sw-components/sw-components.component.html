@@ -1,0 +1,7 @@
+<div>
+    <mat-selection-list [(ngModel)]="selectedComponent" (selectionChange)="onSelectionChange($event)" [multiple]="false">
+      <mat-list-option *ngFor="let component of components;" [value]="component">
+        {{ component.$.name }}
+      </mat-list-option>
+    </mat-selection-list>
+</div>

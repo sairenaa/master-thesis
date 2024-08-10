@@ -1,0 +1,81 @@
+// Custom Theming for Angular Material
+// For more information: https://material.angular.io/guide/theming
+@use '@angular/material' as mat;
+
+// Include the common styles for Angular Material. We include this here so that you only
+// have to load a single css file for Angular Material in your app.
+// Be sure that you only ever include this mixin once!
+@include mat.core();
+
+@font-face {
+    font-family: 'Poppins';
+    src: url('./assets/fonts/Poppins-Regular.eot');
+    src: url('./assets/fonts/Poppins-Regular.woff2') format('woff2'),
+    url('./assets/fonts/Poppins-Regular.woff') format('woff');
+    font-style: normal;
+    font-weight: normal;
+}
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+app-root {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    background-color: #e4e4e5;
+}
+
+app-title-bar {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    background-color: #483d8b;
+    height: 50px;
+}
+
+app-main-window {
+    display: flex;
+    flex-direction: row;
+    flex-grow: 1;
+    border-top: 2px solid #3b2479;
+    background-color: #e4e4e5;
+    overflow: hidden;
+}
+
+hr {
+    width: 100%;
+    margin: 0px;
+}
+
+button {
+    color: #e4e4e5;
+    background-color: #3b2479;
+    line-height: 26px;
+    border: unset;
+    border-radius: 7px;
+    width: 150px;
+    font-family: 'Poppins';
+    cursor: pointer;
+}
+
+button:disabled {
+    cursor: default;
+    background-color: #696969 !important;
+    color: #c1c1c1 !important;
+}
+
+button:focus {
+    outline: none;
+}
+
+input {
+    margin: 15px;
+    width: 90%;
+}
+
+span {
+    font-family: 'Poppins';
+    font-weight: bold;
+}

@@ -1,0 +1,14 @@
+.side-menu-container {
+    display: flex;
+    flex-direction: column;
+    border-right: 2px solid #3b2479;
+    background-color: #d4d4d4;
+    width: 20%;
+}
+
+.content-window-container {
+    display: flex;
+    flex-direction: column;
+    background-color: #eeeeee;
+    flex-grow: 1;
+}

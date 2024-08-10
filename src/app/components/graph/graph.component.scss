@@ -1,0 +1,13 @@
+.graph-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.tooltip-container {
+    position: absolute;
+    opacity: 0;
+    background: #b0c4de;
+    padding: 5px;
+    border-radius: 5px;
+}

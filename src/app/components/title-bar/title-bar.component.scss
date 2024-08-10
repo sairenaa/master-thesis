@@ -1,0 +1,39 @@
+.title-bar-menu {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    flex-grow: 1;
+    justify-content: space-between;
+    -webkit-app-region: drag;
+}
+
+.right-title-options {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+}
+
+.title-option {
+    color: #e4e4e5;
+    font-size: 24px;
+    cursor: pointer;
+    padding: 15px;
+    -webkit-app-region: no-drag;
+    align-self: center;
+}
+
+.title-option:hover {
+    color: #3b2479;
+}
+
+.normal-text {
+    color: #e4e4e5;
+    font-family: 'Poppins';
+    font-size: 16px;
+    font-weight: 500;
+    padding: 15px;
+}
+
+.align-text-item {
+    align-self: center;
+}
