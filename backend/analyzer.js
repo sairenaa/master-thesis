@@ -89,18 +89,28 @@ class Analyzer {
         // iterate over parsed units from dwarf info
         for (let unitName in this.dwarfParser.ParsedUnits) {
             let unit = this.dwarfParser.ParsedUnits[unitName];
-            // check each child of the compilation unit
+            let fileName = "";
+            // find the file name from the compilation unit
             unit.Children.forEach(function (child) {
                 if (child.tagType === this.dwarfParser.DW_TAG_COMPILE_UNIT) {
-                    let file = child.name;
+                    fileName = child.name;
                     // init file entry in map if not exists
-                    if (!this.fileSymbolMap[file]) {
-                        this.fileSymbolMap[file] = [];
+                    if (!this.fileSymbolMap[fileName]) {
+                        this.fileSymbolMap[fileName] = [];
                     }
-                    // add symbols that belong to this file based on their address range
+                }
+            }.bind(this));
+            // map symbols to correct file
+            unit.Children.forEach(function (child) {
+                // add symbols that belong to this file based on their address range
+                if (child.tagType !== this.dwarfParser.DW_TAG_COMPILE_UNIT) {
                     this.symbols.symbols.forEach(function (symbol) {
                         if (symbol.size > 0 && this.isSymbolInRange(symbol, child)) {
-                            this.fileSymbolMap[file].push(symbol);
+                            this.fileSymbolMap[fileName].push(symbol);
+                        }
+                        // check for variables
+                        if (symbol.type === "OBJ" && this.isVariableInChild(symbol, child)) {
+                            this.fileSymbolMap[fileName].push(symbol);
                         }
                     }.bind(this));
                 }
@@ -122,6 +132,12 @@ class Analyzer {
             highAddress += lowAddress;
         }
         return symbolAddress >= lowAddress && symbolAddress < highAddress;
+    }
+    isVariableInChild(symbol, child) {
+        if (child.tagType === this.dwarfParser.DW_TAG_VARIABLE && child.location) {
+            return symbol.vaddr === util_1.Util.formatAddress(child.location);
+        }
+        return false;
     }
     /**
      * Parse compilation units
@@ -216,10 +232,10 @@ class Analyzer {
         }.bind(this));
         this.ProjectImage.addAttribute("date", new Date().toISOString());
         const projectImageXml = util_1.Util.createXml(this.projectImage);
-        return util_1.Util.writeFile((0, path_1.join)(this.configuration.Out, "project_image.xml"), projectImageXml);
-        // .then(function(this: Analyzer) {
-        //     return this.database.saveProjectImage(this.projectImage, this.configuration.Elf);
-        // }.bind(this));
+        return util_1.Util.writeFile((0, path_1.join)(this.configuration.Out, "project_image.xml"), projectImageXml)
+            .then(function () {
+            return this.database.saveProjectImage(this.projectImage, this.configuration.Elf);
+        }.bind(this));
     }
     getSwComponent(component, elfLocation) {
         return this.database.getComponentData(component, elfLocation);

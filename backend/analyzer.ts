@@ -109,21 +109,32 @@ export class Analyzer {
         // iterate over parsed units from dwarf info
         for(let unitName in this.dwarfParser.ParsedUnits) {
             let unit = this.dwarfParser.ParsedUnits[unitName];
-
-            // check each child of the compilation unit
-            unit.Children.forEach(function(this: Analyzer, child: any) {
+            let fileName = "";
+    
+            // find the file name from the compilation unit
+            unit.Children.forEach(function (this: Analyzer, child: any) {
                 if(child.tagType === this.dwarfParser.DW_TAG_COMPILE_UNIT) {
-                    let file = child.name;
-
+                    fileName = child.name;
+    
                     // init file entry in map if not exists
-                    if(!this.fileSymbolMap[file]) {
-                        this.fileSymbolMap[file] = [];
+                    if(!this.fileSymbolMap[fileName]) {
+                        this.fileSymbolMap[fileName] = [];
                     }
-
-                    // add symbols that belong to this file based on their address range
-                    this.symbols.symbols.forEach(function(this: Analyzer, symbol: any) {
+                }
+            }.bind(this));
+    
+            // map symbols to correct file
+            unit.Children.forEach(function (this: Analyzer, child: any) {
+                // add symbols that belong to this file based on their address range
+                if(child.tagType !== this.dwarfParser.DW_TAG_COMPILE_UNIT) {
+                    this.symbols.symbols.forEach(function (this: Analyzer, symbol: any) {
                         if(symbol.size > 0 && this.isSymbolInRange(symbol, child)) {
-                            this.fileSymbolMap[file].push(symbol);
+                            this.fileSymbolMap[fileName].push(symbol);
+                        }
+    
+                        // check for variables
+                        if(symbol.type === "OBJ" && this.isVariableInChild(symbol, child)) {
+                            this.fileSymbolMap[fileName].push(symbol);
                         }
                     }.bind(this));
                 }
@@ -148,6 +159,14 @@ export class Analyzer {
         }
 
         return symbolAddress >= lowAddress && symbolAddress < highAddress;
+    }
+
+    private isVariableInChild(symbol: any, child: any): boolean {
+        if(child.tagType === this.dwarfParser.DW_TAG_VARIABLE && child.location) {
+            return symbol.vaddr === Util.formatAddress(child.location);
+        }
+
+        return false;
     }
 
     /**

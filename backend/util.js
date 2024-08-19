@@ -137,8 +137,13 @@ class Util {
         return '0x' + address.toString(16);
     }
     static formatAddress(address) {
-        if (typeof address === 'string' && address.startsWith('0x')) {
-            return parseInt(address, 16);
+        if (typeof address === 'string') {
+            if (address.startsWith('0x')) {
+                return parseInt(address, 16);
+            }
+            else {
+                return parseInt('0x' + address, 16);
+            }
         }
         return Number(address);
     }
