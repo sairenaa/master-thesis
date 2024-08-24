@@ -5,7 +5,7 @@ import { IpcChannels } from '../../../../backend/ipc-channels';
 import { IpcMainEvent } from 'electron';
 import { ComponentService } from '../../component-service';
 
-const margin = { top: 20, right: 30, bottom: 30, left: 40 };
+const margin = { top: 20, right: 30, bottom: 30, left: 50 };
 const width = 800 - margin.left - margin.right;
 const height = 400 - margin.top - margin.bottom;
 
@@ -69,14 +69,22 @@ export class GraphComponent {
       .range([0, width]);
     this.svg.append('g')
       .attr('transform', `translate(0,${height})`)
-      .call(d3.axisBottom(x));
+      .call(d3.axisBottom<Date>(x)
+              .tickFormat(d3.timeFormat('%b %Y'))
+              .tickValues(data.map(d => d.date)));
 
     // add y-axis
     const y = d3.scaleLinear()
       .domain([0, d3.max(data, d => d.size) as number])
       .range([height, 0]);
     this.svg.append('g')
-      .call(d3.axisLeft(y));
+      .call(d3.axisLeft(y))
+      .append('text')
+      .attr('fill', 'black')
+      .text('Bytes')
+      .attr('x', 2)
+      .attr('y', -4)
+      .attr('text-anchor', 'end');
 
     // add the line
     this.svg.append('path')
